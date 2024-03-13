@@ -20,16 +20,16 @@ public class NameRepository {
 
             switch (iSelection){
                 case 1:
-                    strFullName = getFullName();
+                    strFullName = getFullName("Enter full name");
                     bNameAdded = add(strFullName);
                     break;
                 case 2:
-                     strFullName = getFullName();
+                     strFullName = getFullName("Enter name to search for");
                      strSearchFullName = find(strFullName);
                      if(strSearchFullName != null){
-                         System.out.println("Name: " + strSearchFullName + " found in the repository");
+                         System.out.println("The name " + strFullName + " is found in the repository");
                      }else{
-                         System.out.println("The Name does not exist in the repository");
+                         System.out.println("The name "+ strFullName + " does not exist in the repository");
                      }
                      break;
                 case 3: printRepository();
@@ -53,13 +53,13 @@ public class NameRepository {
     }
     private static int getSelection(){
         Scanner iScan = new Scanner(System.in);
-        System.out.print("Enter meny choice: ");
+        System.out.print("Enter menu choice: ");
         return  iScan.nextInt();
 
     }
-    private static String getFullName(){
+    private static String getFullName(String strprint){
         Scanner strScan = new Scanner(System.in);
-        System.out.print("FullName: ");
+        System.out.print(strprint + ": ");
         return strScan.nextLine();
 
     }
