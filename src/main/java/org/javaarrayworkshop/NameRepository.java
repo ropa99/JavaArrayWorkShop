@@ -3,118 +3,184 @@ import java.util.Scanner;
 import java.util.Arrays;
 
 public class NameRepository {
-    static String strArrayRepository[]= new String[10];//Need to set a fixed size for name repository
-    static int iCountStoredNames = 0;
-    public static void main(String[] args) {
+    static String names[]= new String[0];
 
-        //String strArrayRepository[]= new String[10];
-        String strFullName = ""; //Store the entered full name
-        String strSearchFullName = ""; //Returned searched name or null
 
-        int iSelection=0; //Meny selection
-        boolean bNameAdded = false;
-
-        do{
-            showMeny();
-            iSelection = getSelection();
-
-            switch (iSelection){
-                case 1:
-                    strFullName = getFullName("Enter full name");
-                    bNameAdded = add(strFullName);
-                    break;
-                case 2:
-                     strFullName = getFullName("Enter name to search for");
-                     strSearchFullName = find(strFullName);
-                     if(strSearchFullName != null){
-                         System.out.println("The name " + strFullName + " is found in the repository");
-                     }else{
-                         System.out.println("The name "+ strFullName + " does not exist in the repository");
-                     }
-                     break;
-                case 3: printRepository();
-                    break;
-                case 5:
-                    System.out.println("ByBy");
-                    break;
-            }
-        }while(iSelection!=5);
-
-    }
-
-    private static void showMeny(){
-        System.out.println("**********************");
-        System.out.println("1.Register/Add full name: " );
-        System.out.println("2.Find full name:     " );
-        System.out.println("3.Print name repository:" );
-        System.out.println("5.Quit " );
-        System.out.println("**********************");
-
-    }
-    private static int getSelection(){
-        Scanner iScan = new Scanner(System.in);
-        System.out.print("Enter menu choice: ");
-        return  iScan.nextInt();
-
-    }
-    private static String getFullName(String strprint){
-        Scanner strScan = new Scanner(System.in);
-        System.out.print(strprint + ": ");
-        return strScan.nextLine();
-
-    }
     public static String find(final String fullName){
 
-           String searchName = null;
-           for (String name : strArrayRepository) {
-               if(name == null) continue;
-               if (name.equalsIgnoreCase(fullName)) {
-                   searchName = name;
-                   break;
-               }
+        String searchName = null;
+        for (String name : names) {
 
-           }
-           return searchName;
+            if (compareStrings(name,fullName)) {
+                searchName = name;
+                break;
+            }
 
-
-
+        }
+        return searchName;
     }
+
     public static boolean add(final String fullName){
         boolean bSavedName = false;
         if(find(fullName) != null){
             bSavedName = false; //is in the registry
 
         }else{
-            //Save the name
-            saveName(fullName);
+            //Create a copy names array
+            String namesCopy[] = new String[names.length +1] ;
+            //Copy content of old names array to new array
+            namesCopy = Arrays.copyOf(names,names.length+1);
+            //Add new name to last position of new array
+            namesCopy[namesCopy.length - 1]= fullName;
+            //Set new arr to old arr
+            names=namesCopy;
             bSavedName = true; //Name saved
         }
         return bSavedName;
 
     }
 
-    private static void saveName(String strFullName){
-        //Check if this is the first name in the array
-        //1. Check the name counter.
-        if(iCountStoredNames == 0 && strArrayRepository[0] == null){
-            //Store the first name
-            strArrayRepository[0] = strFullName;
-            iCountStoredNames++;
-        }else if(iCountStoredNames > 0 && iCountStoredNames < strArrayRepository.length) {
-            //Store name
-            strArrayRepository[iCountStoredNames] = strFullName;
-            iCountStoredNames++;
-        }else {
-            System.out.println("Name repository is full,try another day");
+    public static String[] findByFirstName(final String firstName){
+        String strDecodeName ="";
+        int iSpacePosition=0;
+        int iSizeOfFirstNameArr = 0;
+        int iFirstNameIndex=0;
+        String[] strFirstNameArr = new String[0];
+
+        for (int i = 0; i < names.length; i++) {
+
+
+                   //Get the first element from the repository and remove any space before and after the name
+                    strDecodeName = names[i].trim();
+                    //Check where in the string the space is
+                    iSpacePosition = strDecodeName.indexOf(" ");
+
+                    if (iSpacePosition > 0) {
+                        //Get the first name using position of space
+                        strDecodeName = getSubString(strDecodeName,0,iSpacePosition);
+                        //Check if it is the correct first name
+                        if (compareStrings(strDecodeName,firstName)) {
+
+                            //Create a copy names array
+                            String tempArray[] = new String[strFirstNameArr.length +1] ;
+                            //Copy content of old names array to new array
+                            tempArray = Arrays.copyOf(strFirstNameArr,strFirstNameArr.length+1);
+                            //Add new name to last position of new array
+                            tempArray[tempArray.length - 1]= names[i];
+                            //Set new arr to old arr
+                            strFirstNameArr=tempArray;
+
+
+                        }
+
+                    }
+                }
+                return strFirstNameArr;
+
+
+
+    }
+    public static String[] findByLastName(final String lastName){
+        String strDecodeName ="";
+        int iSpacePosition=0;
+        int iStringLength =0;
+        int iLastNameIndex =0;
+        String[] strLastNameArr = new String[0];
+
+        for (int i = 0; i < names.length; i++) {
+
+            //Get the first element from the repository and remove any space before and after the name
+            strDecodeName = names[i].trim();
+            //Check where in the string the space is
+            iSpacePosition = strDecodeName.indexOf(" ");
+            //Get the full length of the name string
+            iStringLength = strDecodeName.length();
+
+            if (iSpacePosition > 0) {
+                //Get the last name using position of space
+                strDecodeName = getSubString(strDecodeName,iSpacePosition,iStringLength);
+                //Check if it is the correct last name
+                if (compareStrings (strDecodeName,lastName)) {
+
+
+                    //Create a copy names array
+                    String tempArray[] = new String[strLastNameArr.length +1] ;
+                    //Copy content of old names array to new array
+                    tempArray = Arrays.copyOf(strLastNameArr,strLastNameArr.length+1);
+                    //Add new name to last position of new array
+                    tempArray[tempArray.length - 1]= names[i];
+                    //Set new arr to old arr
+                    strLastNameArr=tempArray;
+                }
+
+            }
         }
-        //return iNameCount;
+        return strLastNameArr;
+    }
+
+
+    public static boolean update(final String original, final String updatedName){
+        boolean retValue=false;
+        //Check if the original name or the name to update  exist in the repository
+        if(find(original) == null && find(updatedName) == null) {
+            retValue  = false;
+        }else {
+            //update the name
+            for (int i = 0; i < names.length; i++) {
+                if (compareStrings(names[i], original)) {
+                    names[i] = updatedName;
+                    retValue =  true;
+                }
+
+            }
+        }
+        //printRepository("After update:", names);
+        return retValue;
+
+    }
+
+    public static boolean remove(final String fullName){
+        int i,x =0;
+        //Check if name in names repository
+        if(find(fullName) == null){ //name not found
+            return false;
+        }
+        //printRepository("Before remove:", names);
+        //Create an temp array with new size names -1
+        String tempArray[]= new String[names.length - 1];
+        //Move the other names to the temp array
+        for (i = 0; i < names.length; i++) {
+            if(!compareStrings(names[i],fullName)){
+                tempArray[x] = names[i];
+                x++;
+            }
+
+        }
+        //Set temp array = to old array
+        names = tempArray;
+        //printRepository("After remove:", names);
+        return true;
+    }
+
+    private static String getSubString(String strToDecode,int startPosition,int endPosition){
+        return strToDecode.substring(startPosition,endPosition);
+    }
+
+    private static boolean compareStrings(String oldString,String newString){
+        if (oldString.trim().equalsIgnoreCase(newString) ) {
+            return true;
+
+        } else{
+            return false;
+        }
 
 
     }
-    private static void printRepository(){
-        System.out.println("Names in repository");
-        System.out.println(Arrays.toString(strArrayRepository));
-    }
 
+
+    public static void printRepository(String strHeading, String[] strPrntRepository){
+        System.out.println(strHeading);
+        System.out.println(Arrays.toString(strPrntRepository));
+    }
 
 }
