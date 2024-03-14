@@ -117,20 +117,7 @@ public class NameRepository {
         }
         return strLastNameArr;
     }
-    private static String getSubString(String strToDecode,int startPosition,int endPosition){
-        return strToDecode.substring(startPosition,endPosition);
-    }
 
-    private static boolean compareStrings(String oldString,String newString){
-        if (oldString.trim().equalsIgnoreCase(newString) ) {
-            return true;
-
-        } else{
-            return false;
-        }
-
-
-    }
 
     public static boolean update(final String original, final String updatedName){
         boolean retValue=false;
@@ -147,8 +134,46 @@ public class NameRepository {
 
             }
         }
-        printRepository("After update:", names);
+        //printRepository("After update:", names);
         return retValue;
+
+    }
+
+    public static boolean remove(final String fullName){
+        int i,x =0;
+        //Check if name in names repository
+        if(find(fullName) == null){ //name not found
+            return false;
+        }
+        //printRepository("Before remove:", names);
+        //Create an temp array with new size names -1
+        String tempArray[]= new String[names.length - 1];
+        //Move the other names to the temp array
+        for (i = 0; i < names.length; i++) {
+            if(!compareStrings(names[i],fullName)){
+                tempArray[x] = names[i];
+                x++;
+            }
+
+        }
+        //Set temp array = to old array
+        names = tempArray;
+        //printRepository("After remove:", names);
+        return true;
+    }
+
+    private static String getSubString(String strToDecode,int startPosition,int endPosition){
+        return strToDecode.substring(startPosition,endPosition);
+    }
+
+    private static boolean compareStrings(String oldString,String newString){
+        if (oldString.trim().equalsIgnoreCase(newString) ) {
+            return true;
+
+        } else{
+            return false;
+        }
+
 
     }
 

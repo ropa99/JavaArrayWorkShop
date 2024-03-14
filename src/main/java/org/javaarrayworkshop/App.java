@@ -19,6 +19,8 @@ public class App
         arr = NameRepository.findByLastName("Karlsson");
         NameRepository.printRepository("Last names search array:",arr );
         NameRepository.update("Kalle Karlsson","Kalle Karlsson");
+        NameRepository.remove("Kalle Karlsson");
+
 
 
     }
